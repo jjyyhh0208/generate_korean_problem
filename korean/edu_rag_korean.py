@@ -22,7 +22,6 @@ PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME")
 
 
 def main():
-
     # OCR, Embedding Model, LLM, Pinecone 설정
     ocr_service = OCRService()
     embeddings_model = OpenAIEmbeddings()
@@ -137,10 +136,13 @@ def main():
 
                     final_prompt_reference = st.session_state.final_text
 
-                    result_text = problem_generator.vectorize_and_search_similar(
-                        final_prompt_reference
+                    result_text, query_results = (
+                        problem_generator.vectorize_and_search_similar(
+                            final_prompt_reference
+                        )
                     )
-                    st.write(result_text)
+
+                    st.write(query_results)
 
                     extracted_poem = final_prompt_reference.split("\n\n")[0]
                     extracted_problem = final_prompt_reference.split("\n\n")[1]

@@ -21,10 +21,10 @@ class ProblemGenerator:
         extracted_problem_vector = self.embeddings_model.embed_query(extracted_text)
 
         query_results = self.index.query(
-            vector=[extracted_problem_vector], top_k=4, include_metadata=True
+            vector=[extracted_problem_vector], top_k=5, include_metadata=True
         )
 
         temp_text = [match["metadata"]["text"] for match in query_results["matches"]]
         result_text = "\n\n".join(temp_text)
 
-        return result_text
+        return result_text, query_results
