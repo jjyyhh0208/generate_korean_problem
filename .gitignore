@@ -133,6 +133,10 @@ env.bak/
 venv.bak/
 myvenv/
 
+
+.DS_Store
+
+
 # Spyder project settings
 .spyderproject
 .spyproject
