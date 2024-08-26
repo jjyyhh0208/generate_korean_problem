@@ -15,8 +15,8 @@ pinecone_host = "https://edu-rag-korean-n7vjsiy.svc.aped-4627-b74a.pinecone.io"
 index = pinecone.Index(pinecone_index_name, pinecone_host)
 
 with open(
-    # "/Users/collegenie/Desktop/generate_korean_problem/korean/concept.json",
-    "/Users/collegenie/Desktop/generate_korean_problem/korean/masterpiece.json",
+    # "/Users/collegenie/Desktop/generate_korean_problem/concept.json",
+    "/Users/collegenie/Desktop/generate_korean_problem/masterpiece.json",
     "r",
     encoding="utf-8",
 ) as f:
