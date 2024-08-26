@@ -133,8 +133,6 @@ env.bak/
 venv.bak/
 myvenv/
 
-/masterpiece.json
-/concept.json
 
 .DS_Store
 
