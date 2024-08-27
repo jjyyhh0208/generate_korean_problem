@@ -1,7 +1,7 @@
 import random
 
 
-class ProblemGenerator:
+class ImageReaderAndVectorizer:
     def __init__(self, **kwargs):
         self.ocr_service = kwargs.get("ocr_service")
         self.embeddings_model = kwargs.get("embeddings_model")
