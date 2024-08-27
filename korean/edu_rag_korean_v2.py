@@ -49,13 +49,16 @@ def main():
         "언어의 본질",
         "품사",
     ]
-    category_type = ["문법", "문학"]
+    category_type = ["문법", "문학", "읽기", "쓰기", "듣기, 말하기"]
 
     # Streamlit 세션 상태 초기화
     st.session_state.setdefault("masterpiece_uploaded", False)
     st.session_state.setdefault("article_uploaded", False)
     st.session_state.setdefault("problem_type_literature", False)
     st.session_state.setdefault("problem_type_grammar", False)
+    st.session_state.setdefault("problem_type_reading", False)
+    st.session_state.setdefault("problem_type_writing", False)
+    st.session_state.setdefault("problem_type_listeningspeaking", False)
     st.session_state.setdefault("read_masterpiece_finished", False)
     st.session_state.setdefault("read_article_finished", False)
     st.session_state.setdefault("extracted_problem_text", "")
@@ -119,6 +122,15 @@ def main():
 
             elif gpt_classified_data["main_category"] == "문법":
                 st.session_state.problem_type_grammar = True
+
+            elif gpt_classified_data["main_category"] == "읽기":
+                st.session_state.problem_type_reading == True
+
+            elif gpt_classified_data["main_category"] == "쓰기":
+                st.session_state.problem_type_writing == True
+
+            elif gpt_classified_data["main_category"] == "듣기, 말하기":
+                st.session_state.problem_type_listeningspeaking == True
 
         # 문제가 문학 문제라면
         if st.session_state.problem_type_literature:
@@ -333,6 +345,145 @@ def main():
                                 **gpt_chat_source
                             )
                             st.write(gpt_final_problem)
+
+        elif st.session_state.problem_type_reading:
+
+            uploaded_article = st.file_uploader(
+                "출제하고자 하는 지문을 올려주세요.",
+                type=["jpg", "jpeg", "png"],
+                key="masterpiece_uploader",
+            )
+
+            if uploaded_article is not None:
+                st.image(uploaded_article, "Uploaded Image", use_column_width=True)
+                st.session_state.article_uploaded = True
+                if st.session_state.article_uploaded:
+                    # 작품 인식 가동
+                    if st.button("지문 인식"):
+                        article_text = image_reader_data_vectorizer.read_image(
+                            uploaded_article
+                        )
+                        st.session_state.read_article_finished = True
+                    # 작품 인식 완료
+                    if st.session_state.read_masterpiece_finished:
+                        # 문제와 지문을 하나의 query_text 변수에 넣어둠
+                        query_text = article_text + extracted_problem_text
+                        # 해당 문제와 지문으로 DB에 있는 개념 추출
+                        result_concept = (
+                            image_reader_data_vectorizer.vectorize_and_search_similar(
+                                query_text,
+                                gpt_classified_data["main_category"],
+                                "개념",
+                            )
+                        )
+                        required_format = (
+                            gpt_answer_formatter.create_gpt_result_format()
+                        )
+                        message = prompt_maker.create_prompt()
+                        st.write(problem_type)
+                        gpt_chat_source = {
+                            "message": message,
+                            "required_format": required_format,
+                            "extracted_problem_text": extracted_problem_text,
+                            "result_concept": result_concept,
+                            "problem_type": problem_type,
+                        }
+                        gpt_final_problem = gpt_chat_completer.complete_chat(
+                            **gpt_chat_source
+                        )
+                        st.write(gpt_final_problem)
+
+        elif st.session_state.problem_type_writing:
+            uploaded_article = st.file_uploader(
+                "출제하고자 하는 지문을 올려주세요.",
+                type=["jpg", "jpeg", "png"],
+                key="masterpiece_uploader",
+            )
+
+            if uploaded_article is not None:
+                st.image(uploaded_article, "Uploaded Image", use_column_width=True)
+                st.session_state.article_uploaded = True
+                if st.session_state.article_uploaded:
+                    # 작품 인식 가동
+                    if st.button("지문 인식"):
+                        article_text = image_reader_data_vectorizer.read_image(
+                            uploaded_article
+                        )
+                        st.session_state.read_article_finished = True
+                    # 작품 인식 완료
+                    if st.session_state.read_masterpiece_finished:
+                        # 문제와 지문을 하나의 query_text 변수에 넣어둠
+                        query_text = article_text + extracted_problem_text
+                        # 해당 문제와 지문으로 DB에 있는 개념 추출
+                        result_concept = (
+                            image_reader_data_vectorizer.vectorize_and_search_similar(
+                                query_text,
+                                gpt_classified_data["main_category"],
+                                "개념",
+                            )
+                        )
+                        required_format = (
+                            gpt_answer_formatter.create_gpt_result_format()
+                        )
+                        message = prompt_maker.create_prompt()
+                        st.write(problem_type)
+                        gpt_chat_source = {
+                            "message": message,
+                            "required_format": required_format,
+                            "extracted_problem_text": extracted_problem_text,
+                            "result_concept": result_concept,
+                            "problem_type": problem_type,
+                        }
+                        gpt_final_problem = gpt_chat_completer.complete_chat(
+                            **gpt_chat_source
+                        )
+                        st.write(gpt_final_problem)
+
+        elif st.session_state.problem_type_listeningspeaking:
+            uploaded_article = st.file_uploader(
+                "출제하고자 하는 지문을 올려주세요.",
+                type=["jpg", "jpeg", "png"],
+                key="masterpiece_uploader",
+            )
+
+            if uploaded_article is not None:
+                st.image(uploaded_article, "Uploaded Image", use_column_width=True)
+                st.session_state.article_uploaded = True
+                if st.session_state.article_uploaded:
+                    # 작품 인식 가동
+                    if st.button("지문 인식"):
+                        article_text = image_reader_data_vectorizer.read_image(
+                            uploaded_article
+                        )
+                        st.session_state.read_article_finished = True
+                    # 작품 인식 완료
+                    if st.session_state.read_masterpiece_finished:
+                        # 문제와 지문을 하나의 query_text 변수에 넣어둠
+                        query_text = article_text + extracted_problem_text
+                        # 해당 문제와 지문으로 DB에 있는 개념 추출
+                        result_concept = (
+                            image_reader_data_vectorizer.vectorize_and_search_similar(
+                                query_text,
+                                gpt_classified_data["main_category"],
+                                "개념",
+                            )
+                        )
+                        required_format = (
+                            gpt_answer_formatter.create_gpt_result_format()
+                        )
+                        message = prompt_maker.create_prompt()
+                        st.write(problem_type)
+                        gpt_chat_source = {
+                            "message": message,
+                            "required_format": required_format,
+                            "extracted_problem_text": extracted_problem_text,
+                            "result_concept": result_concept,
+                            "problem_type": problem_type,
+                        }
+                        gpt_final_problem = gpt_chat_completer.complete_chat(
+                            **gpt_chat_source
+                        )
+                        st.write(gpt_final_problem)
 
 
 if __name__ == "__main__":
