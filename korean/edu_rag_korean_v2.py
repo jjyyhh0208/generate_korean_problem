@@ -42,12 +42,22 @@ def main():
     image_reader_data_vectorizer = ImageReaderAndVectorizer(**params)
     problem_type = [
         "빈칸 채우기",
-        "주제/내용 파악하기",
+        "주제 파악하기",
+        "내용 파악하기",
         "작품 비교하기",
         "표현법 분석하기",
         "문학: <보기> 분석하기",
         "언어의 본질",
         "품사",
+        "글의 목적 파악하기",
+        "자료 분석하기",
+        "내용 추가하기",
+        "글 고쳐쓰기",
+        "글의 효과 파악하기",
+        "갈등 파악하기",
+        "인물의 심리 파악하기",
+        "말하기 태도 파악하기",
+        "토의 분석하기",
     ]
     category_type = ["문법", "문학", "읽기", "쓰기", "듣기, 말하기"]
 
@@ -84,8 +94,8 @@ def main():
 
             # gpt의 답변 형식 지정
             required_gpt_format = {
-                "main_category": "분류된 분야",
-                "problem_type": "분류된 유형",
+                "main_category": "분류된 분야(str)",
+                "problem_type": "분류된 유형(str)",
             }
             message = [
                 ("system", "당신은 국어 문제를 분류하는 교사입니다."),
@@ -124,13 +134,13 @@ def main():
                 st.session_state.problem_type_grammar = True
 
             elif gpt_classified_data["main_category"] == "읽기":
-                st.session_state.problem_type_reading == True
+                st.session_state.problem_type_reading = True
 
             elif gpt_classified_data["main_category"] == "쓰기":
-                st.session_state.problem_type_writing == True
+                st.session_state.problem_type_writing = True
 
             elif gpt_classified_data["main_category"] == "듣기, 말하기":
-                st.session_state.problem_type_listeningspeaking == True
+                st.session_state.problem_type_listeningspeaking = True
 
         # 문제가 문학 문제라면
         if st.session_state.problem_type_literature:
@@ -315,7 +325,7 @@ def main():
                             st.session_state.read_article_finished = True
 
                         # 작품 인식 완료
-                        if st.session_state.read_masterpiece_finished:
+                        if st.session_state.read_article_finished:
                             # 문제와 지문을 하나의 query_text 변수에 넣어둠
                             query_text = article_text + extracted_problem_text
 
@@ -347,12 +357,18 @@ def main():
                             st.write(gpt_final_problem)
 
         elif st.session_state.problem_type_reading:
-
             uploaded_article = st.file_uploader(
                 "출제하고자 하는 지문을 올려주세요.",
                 type=["jpg", "jpeg", "png"],
                 key="masterpiece_uploader",
             )
+            extracted_problem_text = st.session_state.extracted_problem_text
+            gpt_classified_data = st.session_state.gpt_classified_data
+            problem_type = gpt_classified_data["problem_type"]
+
+            # 문제 유형별 프롬프트 제작 인스턴스, 답변 형식 생성 인스턴스 등 설정
+            prompt_maker = PromptMaker(problem_type)
+            gpt_answer_formatter = GptAnswerFormatter(problem_type)
 
             if uploaded_article is not None:
                 st.image(uploaded_article, "Uploaded Image", use_column_width=True)
@@ -365,7 +381,7 @@ def main():
                         )
                         st.session_state.read_article_finished = True
                     # 작품 인식 완료
-                    if st.session_state.read_masterpiece_finished:
+                    if st.session_state.read_article_finished:
                         # 문제와 지문을 하나의 query_text 변수에 넣어둠
                         query_text = article_text + extracted_problem_text
                         # 해당 문제와 지문으로 DB에 있는 개념 추출
@@ -399,6 +415,13 @@ def main():
                 type=["jpg", "jpeg", "png"],
                 key="masterpiece_uploader",
             )
+            extracted_problem_text = st.session_state.extracted_problem_text
+            gpt_classified_data = st.session_state.gpt_classified_data
+            problem_type = gpt_classified_data["problem_type"]
+
+            # 문제 유형별 프롬프트 제작 인스턴스, 답변 형식 생성 인스턴스 등 설정
+            prompt_maker = PromptMaker(problem_type)
+            gpt_answer_formatter = GptAnswerFormatter(problem_type)
 
             if uploaded_article is not None:
                 st.image(uploaded_article, "Uploaded Image", use_column_width=True)
@@ -411,7 +434,7 @@ def main():
                         )
                         st.session_state.read_article_finished = True
                     # 작품 인식 완료
-                    if st.session_state.read_masterpiece_finished:
+                    if st.session_state.read_article_finished:
                         # 문제와 지문을 하나의 query_text 변수에 넣어둠
                         query_text = article_text + extracted_problem_text
                         # 해당 문제와 지문으로 DB에 있는 개념 추출
@@ -445,6 +468,13 @@ def main():
                 type=["jpg", "jpeg", "png"],
                 key="masterpiece_uploader",
             )
+            extracted_problem_text = st.session_state.extracted_problem_text
+            gpt_classified_data = st.session_state.gpt_classified_data
+            problem_type = gpt_classified_data["problem_type"]
+
+            # 문제 유형별 프롬프트 제작 인스턴스, 답변 형식 생성 인스턴스 등 설정
+            prompt_maker = PromptMaker(problem_type)
+            gpt_answer_formatter = GptAnswerFormatter(problem_type)
 
             if uploaded_article is not None:
                 st.image(uploaded_article, "Uploaded Image", use_column_width=True)
@@ -457,7 +487,7 @@ def main():
                         )
                         st.session_state.read_article_finished = True
                     # 작품 인식 완료
-                    if st.session_state.read_masterpiece_finished:
+                    if st.session_state.read_article_finished:
                         # 문제와 지문을 하나의 query_text 변수에 넣어둠
                         query_text = article_text + extracted_problem_text
                         # 해당 문제와 지문으로 DB에 있는 개념 추출

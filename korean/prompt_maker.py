@@ -8,8 +8,10 @@ class PromptMaker:
 
         elif self.problem_type == "작품 비교하기":
             return self.compare_masterpiece_prompt()
+
         elif self.problem_type == "품사" or "언어의 본질":
             return self.grammar_prompt()
+
         else:
             return self.other_prompt()
 
@@ -21,7 +23,7 @@ class PromptMaker:
             ),
             (
                 "assistant",
-                "주어진 문제와 주어진 지문을 바탕으로 반드시 주어진 개념 안에서 주어진 유형의 변형된 문제와 정답, 해설과 함께 제시하세요. 반드시 주어진 유형의 5지선다(선택지 5개) 문제를 제시하되, 문제(질문)는 유사하게, 선택지는 제공된 문제와 달라야합니다. 반드시 결과를 키와 문자열 값을 큰따옴표로 감싼 올바른 JSON 형식으로 출력해 주세요.- 출력 형식: JSON, 출력 형태: {required_format}",
+                "주어진 문제와 주어진 지문을 바탕으로 반드시 주어진 개념 안에서 주어진 유형의 변형된 문제와 정답, 해설과 함께 제시하세요. 반드시 선택지는 제공한 글과 동어 제시 절대 금지입니다. 반드시 결과를 키와 문자열 값을 큰따옴표로 감싼 올바른 JSON 형식으로 출력해 주세요.- 출력 형식: JSON, 출력 형태: {required_format}",
             ),
             (
                 "user",
