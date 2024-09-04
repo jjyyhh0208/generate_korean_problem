@@ -5,8 +5,6 @@ from clova_ocr_service import OCRService
 from langchain_openai import ChatOpenAI
 from pinecone import Pinecone
 from korean_vectorizer import ImageReaderAndVectorizer
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.output_parsers import JsonOutputParser
 from prompt_maker import PromptMaker
 from gpt_answer_formatter import GptAnswerFormatter
 from gpt_chat_completer import GptChatCompleter
